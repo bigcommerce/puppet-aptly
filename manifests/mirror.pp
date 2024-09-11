@@ -55,7 +55,7 @@
 #   Default: []
 define aptly::mirror (
   String $location,
-  Variant[String, Hash] $key = {},
+  Variant[String, Hash, Array[String]] $key = {},
   String $keyring            = '/etc/apt/trusted.gpg',
   String $filter             = '',
   String $release            = $::lsbdistcodename,
