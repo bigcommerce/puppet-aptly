@@ -14,7 +14,7 @@
 #   URL of the APT repo.
 #
 # [*key*]
-#   This can either be a key id or a hash including key options. 
+#   This can either be a key id or a hash including key options.
 #   If using a hash, key => { 'id' => <id> } must be specified
 #   Default: {}
 #
@@ -45,7 +45,7 @@
 #   Default: false
 #
 # [*filter_with_deps*]
-#   Boolean to control whether when filtering to include dependencies of matching 
+#   Boolean to control whether when filtering to include dependencies of matching
 #   packages as well
 #   Default: false
 #
@@ -58,7 +58,7 @@ define aptly::mirror (
   Variant[String, Hash, Array[String]] $key = {},
   String $keyring            = '/etc/apt/trusted.gpg',
   String $filter             = '',
-  String $release            = $::lsbdistcodename,
+  String $release            = $facts['os']['distro']['codename'],
   Array $architectures       = [],
   Array $repos               = [],
   Boolean $with_sources      = false,
@@ -105,10 +105,10 @@ define aptly::mirror (
 
   # $::aptly::key_server will be used as default key server
   # key in hash format
-  if is_hash($key) and $key[id] {
-    if is_array($key[id]) {
+  if $key =~ Hash and $key[id] {
+    if $key[id] =~ Array {
       $key_string = join($key[id], "' '")
-    } elsif is_string($key[id]) or is_integer($key[id]) {
+    } elsif $key[id] =~ String or $key[id] =~ Integer {
       $key_string = $key[id]
     } else {
       fail('$key[id] is neither a string nor an array!')
@@ -120,11 +120,11 @@ define aptly::mirror (
     }
 
   # key in string/array format
-  }elsif is_string($key) or is_array($key) {
+  }elsif $key =~ String or $key =~ Array {
     $key_server = $::aptly::key_server
-    if is_array($key) {
+    if $key =~ Array {
       $key_string = join($key, "' '")
-    } elsif is_string($key) or is_integer($key) {
+    } elsif $key =~ String or $key =~ Integer {
       $key_string = $key
     } else {
       fail('$key is neither a string nor an array!')
