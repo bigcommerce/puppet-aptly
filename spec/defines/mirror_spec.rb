@@ -4,17 +4,33 @@ require 'spec_helper'
 
 describe 'aptly::mirror' do
   let(:title) { 'example' }
+
   let(:facts) do
     {
-      lsbdistid: 'Debian',
-      lsbdistcodename: 'precise',
-      osfamily: 'Debian',
+      operatingsystem: 'Debian',
+      operatingsystemrelease: '8.7',
       os: {
+        architecture: 'amd64',
+        distro: {
+          codename: 'stretch',
+          description: 'Debian GNU/Linux 9.4 (stretch)',
+          id: 'Debian',
+          release: {
+            full: '9.4',
+            major: '9',
+            minor: '4'
+          }
+        },
+        family: 'Debian',
+        hardware: 'x86_64',
         name: 'Debian',
         release: {
           full: '9.4',
           major: '9',
           minor: '4'
+        },
+        selinux: {
+          enabled: false
         }
       }
     }
@@ -38,7 +54,7 @@ describe 'aptly::mirror' do
     }
 
     it {
-      is_expected.to contain_exec('aptly_mirror_create-example').with(command: %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$},
+      is_expected.to contain_exec('aptly_mirror_create-example').with(command: %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com stretch$},
                                                                       unless: %r{aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$},
                                                                       user: 'root',
                                                                       require: [
@@ -66,7 +82,7 @@ describe 'aptly::mirror' do
       }
 
       it {
-        is_expected.to contain_exec('aptly_mirror_create-example').with(command: %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/lucid\.example\.com precise$},
+        is_expected.to contain_exec('aptly_mirror_create-example').with(command: %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/lucid\.example\.com stretch$},
                                                                         unless: %r{aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$},
                                                                         user: 'root',
                                                                         require: [
@@ -106,7 +122,7 @@ describe 'aptly::mirror' do
       }
 
       it {
-        is_expected.to contain_exec('aptly_mirror_create-example').with(command: %r{aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$},
+        is_expected.to contain_exec('aptly_mirror_create-example').with(command: %r{aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com stretch$},
                                                                         unless: %r{aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$},
                                                                         user: 'custom_user',
                                                                         require: [
@@ -287,7 +303,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise main},
+          %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com stretch main},
         )
       }
     end
@@ -306,7 +322,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise main contrib non-free},
+          %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com stretch main contrib non-free},
         )
       }
     end
@@ -344,7 +360,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create -architectures="amd64" *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise},
+          %r{aptly -config \/etc\/aptly.conf mirror create -architectures="amd64" *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com stretch},
         )
       }
     end
@@ -363,7 +379,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create -architectures="i386,amd64,armhf" *-keyring=\/etc\/apt\/trusted.gpg -with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise},
+          %r{aptly -config \/etc\/aptly.conf mirror create -architectures="i386,amd64,armhf" *-keyring=\/etc\/apt\/trusted.gpg -with-sources=false -with-udebs=false example http:\/\/repo\.example\.com stretch},
         )
       }
     end
@@ -383,7 +399,7 @@ describe 'aptly::mirror' do
       end
 
       it {
-        is_expected.to raise_error(Puppet::Error, %r{expects a Boolean value})
+        is_expected.to raise_error(Puppet::PreformattedError)
       }
     end
 
@@ -401,7 +417,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=true -with-udebs=false example http:\/\/repo\.example\.com precise},
+          %r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=true -with-udebs=false example http:\/\/repo\.example\.com stretch},
         )
       }
     end
@@ -421,7 +437,7 @@ describe 'aptly::mirror' do
       end
 
       it {
-        is_expected.to raise_error(Puppet::Error, %r{expects a Boolean value})
+        is_expected.to raise_error(Puppet::PreformattedError)
       }
     end
 
@@ -438,7 +454,7 @@ describe 'aptly::mirror' do
       end
 
       it {
-        is_expected.to contain_exec('aptly_mirror_create-example').with_command(%r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=true example http:\/\/repo\.example\.com precise})
+        is_expected.to contain_exec('aptly_mirror_create-example').with_command(%r{aptly -config \/etc\/aptly.conf mirror create *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=true example http:\/\/repo\.example\.com stretch})
       }
     end
   end
@@ -457,7 +473,7 @@ describe 'aptly::mirror' do
       end
 
       it {
-        is_expected.to raise_error(Puppet::Error, %r{expects a Boolean value})
+        is_expected.to raise_error(Puppet::PreformattedError)
       }
     end
 
@@ -475,7 +491,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create  *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false -filter-with-deps example http:\/\/repo\.example\.com precise},
+          %r{aptly -config \/etc\/aptly.conf mirror create  *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false -filter-with-deps example http:\/\/repo\.example\.com stretch},
         )
       }
     end
@@ -496,7 +512,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create  *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false -filter="this is a string" example http:\/\/repo\.example\.com precise},
+          %r{aptly -config \/etc\/aptly.conf mirror create  *-keyring=\/etc\/apt\/trusted.gpg *-with-sources=false -with-udebs=false -filter="this is a string" example http:\/\/repo\.example\.com stretch},
         )
       }
     end
@@ -518,7 +534,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create  *-keyring=\/etc\/test\/somekeyring.gpg *-with-sources=false -with-udebs=false -filter="this is a string" example http:\/\/repo\.example\.com precise},
+          %r{aptly -config \/etc\/aptly.conf mirror create  *-keyring=\/etc\/test\/somekeyring.gpg *-with-sources=false -with-udebs=false -filter="this is a string" example http:\/\/repo\.example\.com stretch},
         )
       }
     end
@@ -538,7 +554,7 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_create-example').with_command(
-          %r{aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false -filter="this is a string" example http:\/\/repo\.example\.com precise},
+          %r{aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false -filter="this is a string" example http:\/\/repo\.example\.com stretch},
         )
       }
     end

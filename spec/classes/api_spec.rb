@@ -78,7 +78,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -100,7 +100,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{is not a string}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -122,7 +122,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{is not a string}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -144,7 +144,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{input needs to be a String}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
 
       context 'invalid format' do
@@ -154,7 +154,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{Valid values for \$listen: :port, <ip>:<port>}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -166,7 +166,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -245,7 +245,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -267,7 +267,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{is not a string}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -289,7 +289,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{is not a string}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -311,7 +311,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{input needs to be a String}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
 
       context 'invalid format' do
@@ -321,7 +321,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{Valid values for \$listen: :port, <ip>:<port>}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
@@ -349,7 +349,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
+        it { is_expected.to raise_error(Puppet::PreformattedError) }
       end
     end
 
